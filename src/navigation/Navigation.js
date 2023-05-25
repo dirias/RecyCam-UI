@@ -25,7 +25,7 @@ export default function Navigation() {
 
 function renderPokeball() {
   return <Image
-    source={require("../assets/pokeball.png")}
+    source={require("../assets/photoButton.png")}
     style={{width:75, height: 75, top: -15}}
     />
 }

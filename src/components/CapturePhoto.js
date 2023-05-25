@@ -1,36 +1,40 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, Image, Text } from 'react-native';
-import { launchCameraAsync } from 'expo-image-picker';
-import * as ImagePicker from 'expo-image-picker';
-import * as Camera from 'expo-camera';
+import React, { useState, useEffect } from 'react';
+import { Camera } from 'expo-camera';
+import * as MediaLibrary from 'expo-media-library';
+import { TouchableOpacity, Text, View, Image } from 'react-native';
 
 export default function CapturePhoto() {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [cameraPermission, setCameraPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setCameraPermission(status === 'granted');
+    })();
+  }, []);
 
   const takePhoto = async () => {
-    // Check camera permission
-    const { status } = await Camera.requestCameraPermissionsAsync();
-    if (status !== 'granted') {
+    if (!cameraPermission) {
       console.log('Camera permission denied');
       return;
     }
 
-    const options = {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-      maxWidth: 500,
-      maxHeight: 500,
-    };
-
-    const result = await launchCameraAsync(options);
-
-    if (!result.cancelled) {
-      setSelectedImage(result.uri);
+    if (cameraRef) {
+      const photo = await cameraRef.takePictureAsync();
+      setSelectedImage(photo.uri);
+      // Save the photo to the device's media library
+      await MediaLibrary.saveToLibraryAsync(photo.uri);
     }
   };
 
   return (
     <View>
+      <Camera
+        style={{ width: 200, height: 200 }}
+        ref={(ref) => setCameraRef(ref)}
+      />
       {selectedImage && (
         <Image source={{ uri: selectedImage }} style={{ width: 200, height: 200 }} />
       )}
