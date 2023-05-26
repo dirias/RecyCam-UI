@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as MediaLibrary from 'expo-media-library';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import ImageTaken from './ImageTaken';
 import CameraR from './CameraR';
 import { Camera } from 'expo-camera';
@@ -12,7 +12,7 @@ export default function CapturePhoto() {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       setCameraPermission(status === 'granted');
     })();
   }, []);
@@ -32,7 +32,7 @@ export default function CapturePhoto() {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <CameraR setCameraRef={setCameraRef} />
       <ImageTaken selectedImage={selectedImage} />
       <TouchableOpacity onPress={takePhoto}>
@@ -41,3 +41,10 @@ export default function CapturePhoto() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '100%'
+  }
+});
