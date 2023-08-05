@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
-export default function ImageTaken({ selectedImage }) {
+export default function Photo({ route }) {
+  const { photoUri } = route.params;
+
   return (
     <View style={styles.container}>
-      {selectedImage && <Image source={{ uri: selectedImage }} style={styles.image} />}
+      <Image source={{ uri: photoUri }} style={styles.image} />
     </View>
   );
 }
@@ -12,11 +14,11 @@ export default function ImageTaken({ selectedImage }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
-    width: 200,
-    height: 200,
+    width: '100%',
+    height: '95%',
   },
 });

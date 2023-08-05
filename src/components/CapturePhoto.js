@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import * as MediaLibrary from 'expo-media-library';
+import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity, Image, View, StyleSheet } from 'react-native';
-import ImageTaken from './ImageTaken';
 import CameraR from './CameraR';
 import { Camera } from 'expo-camera';
 
 export default function CapturePhoto() {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const navigation = useNavigation();
   const [cameraPermission, setCameraPermission] = useState(null);
   const [mediaLibraryPermission, setMediaLibraryPermission] = useState(null);
   const [cameraReady, setCameraReady] = useState(false); // Initialize as false
@@ -41,9 +41,9 @@ export default function CapturePhoto() {
       try {
         const photo = await cameraRef.takePictureAsync();
         console.log('Photo captured:', photo);
-        setSelectedImage(photo.uri);
-        await MediaLibrary.saveToLibraryAsync(photo.uri);
-        console.log('Photo taken');
+        //await MediaLibrary.saveToLibraryAsync(photo.uri);
+        //console.log('Photo taken');
+        navigation.navigate('Photo', { photoUri: photo.uri });
       } catch (error) {
         console.error('Error capturing photo:', error);
       }
@@ -53,7 +53,6 @@ export default function CapturePhoto() {
   return (
     <View >
       {cameraReady && <CameraR setCameraRef={setCameraRef} />}
-      <ImageTaken selectedImage={selectedImage} />
       <TouchableOpacity onPress={takePhoto} disabled={!cameraPermission || !mediaLibraryPermission || !cameraReady}>
         <Image
           source={require("../assets/photoButton.png")}
