@@ -1,11 +1,10 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
-import CapturePhoto from "../components/CapturePhoto";
+import { SafeAreaView, Text } from 'react-native';
 
 export default function Home() {
   return (
     <SafeAreaView>
-      <CapturePhoto />
+      <Text>Home Menu</Text>
     </SafeAreaView>
   );
 }

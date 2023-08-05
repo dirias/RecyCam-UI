@@ -52,23 +52,36 @@ export default function CapturePhoto() {
   };
 
   return (
-    <View >
+    <View style={styles.container}>
       {isFocused && cameraReady && <CameraR setCameraRef={setCameraRef} />}
-      <TouchableOpacity onPress={takePhoto} disabled={!cameraPermission || !mediaLibraryPermission || !cameraReady}>
-        <Image
-          source={require("../assets/photoButton.png")}
-          style={styles.captureIcon}
-        />
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonContainer} onPress={takePhoto} disabled={!cameraPermission || !mediaLibraryPermission || !cameraReady}>
+          <Image
+            source={require("../assets/photoButton.png")}
+            style={styles.captureIcon}
+          />
+        </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '95%',
+    position: 'relative'
+  },
+  buttonContainer:{
+    flex: 1,
+    width: '100%',
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    bottom: -30,
+  },
   captureIcon: {
     width: 45,
     height: 45,
     position: 'absolute',
-    zIndex: 1 
+    zIndex: 1
   },
 });
