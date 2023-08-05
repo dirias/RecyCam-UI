@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import * as MediaLibrary from 'expo-media-library';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused} from '@react-navigation/native';
 import { TouchableOpacity, Image, View, StyleSheet } from 'react-native';
 import CameraR from './CameraR';
 import { Camera } from 'expo-camera';
 
 export default function CapturePhoto() {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [cameraPermission, setCameraPermission] = useState(null);
   const [mediaLibraryPermission, setMediaLibraryPermission] = useState(null);
   const [cameraReady, setCameraReady] = useState(false); // Initialize as false
@@ -52,7 +53,7 @@ export default function CapturePhoto() {
 
   return (
     <View >
-      {cameraReady && <CameraR setCameraRef={setCameraRef} />}
+      {isFocused && cameraReady && <CameraR setCameraRef={setCameraRef} />}
       <TouchableOpacity onPress={takePhoto} disabled={!cameraPermission || !mediaLibraryPermission || !cameraReady}>
         <Image
           source={require("../assets/photoButton.png")}
