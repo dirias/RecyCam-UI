@@ -15,7 +15,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryAddUsageDescription": "We need to save photos to your library"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +26,7 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "CAMERA"
+        "CAMERA", "WRITE_EXTERNAL_STORAGE", "READ_EXTERNAL_STORAGE"
       ]
     },
     "web": {

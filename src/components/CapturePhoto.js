@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as MediaLibrary from 'expo-media-library';
-import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, Image, View, StyleSheet } from 'react-native';
 import ImageTaken from './ImageTaken';
 import CameraR from './CameraR';
 import { Camera } from 'expo-camera';
@@ -12,22 +12,34 @@ export default function CapturePhoto() {
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setCameraPermission(status === 'granted');
+      const cameraStatus = await Camera.requestCameraPermissionsAsync();
+      setCameraPermission(cameraStatus.status === 'granted');
+
+      const mediaLibraryStatus = await MediaLibrary.requestPermissionsAsync();
+      console.log(mediaLibraryStatus)
+      if (mediaLibraryStatus.status !== 'granted') {
+        console.log('Media library permission denied');
+      }
     })();
   }, []);
 
   const takePhoto = async () => {
+    console.log('Button clicked');
     if (!cameraPermission) {
       console.log('Camera permission denied');
       return;
     }
 
     if (cameraRef) {
-      const photo = await cameraRef.takePictureAsync();
-      setSelectedImage(photo.uri);
-      // Save the photo to the device's media library
-      await MediaLibrary.saveToLibraryAsync(photo.uri);
+      try {
+        const photo = await cameraRef.takePictureAsync();
+        console.log('Photo captured:', photo);
+        setSelectedImage(photo.uri);
+        await MediaLibrary.saveToLibraryAsync(photo.uri);
+        console.log('Photo taken');
+      } catch (error) {
+        console.error('Error capturing photo:', error);
+      }
     }
   };
 
@@ -36,15 +48,25 @@ export default function CapturePhoto() {
       <CameraR setCameraRef={setCameraRef} />
       <ImageTaken selectedImage={selectedImage} />
       <TouchableOpacity onPress={takePhoto}>
-        <Text>Take Photo</Text>
+        <Image
+          source={require("../assets/photoButton.png")}
+          style={styles.captureIcon}
+        />
       </TouchableOpacity>
     </View>
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: '100%'
-  }
+    width:'100%',
+    height: '100%',
+    alignItems: 'center',
+  },
+  captureIcon: {
+    width: 75,
+    height: 75,
+    bottom: 80,
+  },
 });

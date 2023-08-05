@@ -1,7 +1,7 @@
 import { View, Text, TabBarIOSItem } from 'react-native'
 // import { createBottonTabNavigator } from "@react-navigation/bottom-tabs"
 // Above just works with nav version5
-import { Image } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 //import Icon from 'react-native-vector-icons/FontAwesome5'
 import HomeNavigation from './HomeNavigation';
@@ -16,16 +16,16 @@ export default function Navigation() {
         <Tab.Screen name="Home" component={HomeNavigation} options={
           {
             tabBarLabel:'',
-            tabBarIcon: () => renderPokeball()
+            tabBarIcon: () => renderIcon()
           }
         }/>
     </Tab.Navigator>
   )
 }
 
-function renderPokeball() {
+function renderIcon() {
   return <Image
-    source={require("../assets/photoButton.png")}
-    style={{width:75, height: 75, top: -15}}
-    />
+        source={require("../assets/home.png")}
+        style={{width:75, height: 75, top: -15}}
+        />
 }
