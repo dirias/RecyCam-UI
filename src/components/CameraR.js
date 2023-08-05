@@ -1,25 +1,30 @@
-import React from 'react';
-import { Camera } from 'expo-camera';
-import { View, StyleSheet } from 'react-native';
+import React, { useState} from 'react';
+import { Camera, CameraType } from 'expo-camera';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function CameraR(props) {
+
+  const [type, setType] = useState(CameraType.back);
+
+  function toggleCameraType() {
+    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+  }
   return (
-    <View style={styles.cameraContainer}>
-      <Camera
-        style={styles.camera} // Set flex: 1 to make it cover full width
-        ref={(ref) => props.setCameraRef(ref)} // Make sure this is called correctly
-      />
+    <View >
+      <Camera style={styles.camera} type={type} ref={(ref) => props.setCameraRef(ref)}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={toggleCameraType} >
+            <Text style={styles.text}>Flip Camera</Text>
+          </TouchableOpacity>
+        </View>
+      </Camera>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  cameraContainer: {
-    width: '100%',
-    height: '100%',
-  },
   camera: {
     width: '100%',
-    height: '100%',
+    height: '95%',
   },
 });

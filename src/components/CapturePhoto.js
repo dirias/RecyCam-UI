@@ -8,6 +8,8 @@ import { Camera } from 'expo-camera';
 export default function CapturePhoto() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [cameraPermission, setCameraPermission] = useState(null);
+  const [mediaLibraryPermission, setMediaLibraryPermission] = useState(null);
+  const [cameraReady, setCameraReady] = useState(false); // Initialize as false
   const [cameraRef, setCameraRef] = useState(null);
 
   useEffect(() => {
@@ -16,20 +18,25 @@ export default function CapturePhoto() {
       setCameraPermission(cameraStatus.status === 'granted');
 
       const mediaLibraryStatus = await MediaLibrary.requestPermissionsAsync();
-      console.log(mediaLibraryStatus)
-      if (mediaLibraryStatus.status !== 'granted') {
-        console.log('Media library permission denied');
+      setMediaLibraryPermission(mediaLibraryStatus.status === 'granted');
+
+      // Set cameraReady to true when camera permissions are granted
+      if (cameraStatus.status === 'granted') {
+        setCameraReady(true);
       }
     })();
   }, []);
 
   const takePhoto = async () => {
-    console.log('Button clicked');
-    if (!cameraPermission) {
-      console.log('Camera permission denied');
+    console.log('clicked')
+    console.log('Camera Permissions', cameraPermission)
+    console.log('Media Library Permissions', mediaLibraryPermission)
+    console.log('Camera Ready', cameraReady)
+    if (!cameraPermission || !mediaLibraryPermission || !cameraReady) {
+      console.log('Permissions or camera not ready');
       return;
     }
-
+    console.log('Camera Ref', cameraRef)
     if (cameraRef) {
       try {
         const photo = await cameraRef.takePictureAsync();
@@ -44,10 +51,10 @@ export default function CapturePhoto() {
   };
 
   return (
-    <View style={styles.container}>
-      <CameraR setCameraRef={setCameraRef} />
+    <View >
+      {cameraReady && <CameraR setCameraRef={setCameraRef} />}
       <ImageTaken selectedImage={selectedImage} />
-      <TouchableOpacity onPress={takePhoto}>
+      <TouchableOpacity onPress={takePhoto} disabled={!cameraPermission || !mediaLibraryPermission || !cameraReady}>
         <Image
           source={require("../assets/photoButton.png")}
           style={styles.captureIcon}
@@ -57,16 +64,11 @@ export default function CapturePhoto() {
   );
 }
 
-
 const styles = StyleSheet.create({
-  container: {
-    width:'100%',
-    height: '100%',
-    alignItems: 'center',
-  },
   captureIcon: {
-    width: 75,
-    height: 75,
-    bottom: 80,
+    width: 45,
+    height: 45,
+    position: 'absolute',
+    zIndex: 1 
   },
 });
