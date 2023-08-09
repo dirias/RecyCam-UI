@@ -4,6 +4,7 @@ import { useNavigation, useIsFocused} from '@react-navigation/native';
 import { TouchableOpacity, Image, View, StyleSheet } from 'react-native';
 import CameraR from './CameraR';
 import { Camera } from 'expo-camera';
+import { runPrediction } from '../model/model'; // Import the functions
 
 export default function CapturePhoto() {
   const navigation = useNavigation();
@@ -44,7 +45,12 @@ export default function CapturePhoto() {
         console.log('Photo captured:', photo);
         //await MediaLibrary.saveToLibraryAsync(photo.uri);
         //console.log('Photo taken');
-        navigation.navigate('Photo', { photoUri: photo.uri });
+        // Get prediction for the captured image
+        const result = await runPrediction(photo.uri);
+        console.log(result)
+        
+        // Navigate to the "Photo" screen with photo URI and prediction
+        navigation.navigate('Photo', { photoUri: photo.uri, prediction: result });
       } catch (error) {
         console.error('Error capturing photo:', error);
       }
