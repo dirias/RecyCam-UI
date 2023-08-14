@@ -1,10 +1,15 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, Text } from 'react-native';
 
-export default function ImageTaken({ selectedImage }) {
+export default function PhotoScreen({ route }) {
+  const { selectedImage, prediction } = route.params;
+
+  console.log('Received Prediction:', prediction);
+
   return (
     <View style={styles.container}>
       {selectedImage && <Image source={{ uri: selectedImage }} style={styles.image} />}
+      <Text>{prediction}</Text>
     </View>
   );
 }
